@@ -1,0 +1,32 @@
+Little Lemon Booking Project
+
+Project: littlelemon
+App: restaurant
+Database: MySQL
+
+Run instructions:
+
+1. Start MySQL Server.
+2. Make sure the littlelemon database exists.
+3. Update the MySQL password in littlelemon/settings.py if needed.
+
+Commands:
+
+py -m pipenv install
+py -m pipenv shell
+python manage.py migrate
+python manage.py runserver
+
+Pages:
+
+Book:
+http://127.0.0.1:8000/book/
+
+Reservations:
+http://127.0.0.1:8000/reservations/
+
+Bookings API:
+http://127.0.0.1:8000/bookings
+
+Date-filtered API example:
+http://127.0.0.1:8000/bookings?date=2026-10-08

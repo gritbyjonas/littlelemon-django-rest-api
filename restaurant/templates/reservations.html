@@ -1,0 +1,197 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'restaurant/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Lemon - Reservations</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #333333;
+        }
+
+        .page {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 30px 24px;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 0 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-mark {
+            width: 44px;
+            height: 62px;
+            background: #495e57;
+            border-radius: 60% 40% 60% 40%;
+            transform: rotate(-12deg);
+        }
+
+        .logo-text {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #495e57;
+        }
+
+        nav {
+            background: #495e57;
+            padding: 12px 20px;
+            margin-bottom: 36px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 28px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-top: 0;
+            margin-bottom: 28px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 45px;
+            align-items: start;
+        }
+
+        .json-card {
+            background: #f7f7f7;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-card {
+            background: #f4ce14;
+            border-radius: 5px;
+            padding: 22px;
+        }
+
+        .info-card h2 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .info-card p {
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 65px;
+            padding: 24px 0;
+            border-top: 1px solid #bdbdbd;
+            text-align: right;
+            color: #555555;
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-text {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <header>
+        <div class="brand">
+            <div class="logo-mark"></div>
+            <div class="logo-text">LITTLE LEMON</div>
+        </div>
+    </header>
+
+    <nav>
+        <a href="/book/">Book</a>
+        <a href="/reservations/">Reservations</a>
+    </nav>
+
+    <h1>All Reservations</h1>
+
+    <div class="content">
+
+        <div class="json-card">
+            <pre>{{ bookings_json }}</pre>
+        </div>
+
+        <div class="info-card">
+            <h2>Reservation Data</h2>
+
+            <p>
+                This page displays all current Little Lemon
+                reservations as JSON data.
+            </p>
+
+            <p>
+                You can also retrieve reservations for a
+                specific date using the bookings API.
+            </p>
+
+            <p>
+                Example:
+            </p>
+
+            <code>
+                /bookings?date=2026-10-08
+            </code>
+        </div>
+
+    </div>
+
+    <footer>
+        Copyright Little Lemon
+    </footer>
+
+</div>
+
+</body>
+</html>
