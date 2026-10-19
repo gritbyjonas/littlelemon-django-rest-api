@@ -73,7 +73,8 @@ export default function BookingForm() {
     const guests = Number(formData.guests);
 
     if (!Number.isInteger(guests) || guests < 1 || guests > 10) {
-      nextErrors.guests = "Please select between 1 and 10 guests.";
+      nextErrors.guests =
+        "Please select between 1 and 10 guests.";
     }
 
     return nextErrors;
@@ -113,7 +114,8 @@ export default function BookingForm() {
       });
     } catch (error) {
       setServerError(
-        error.message || "Unable to complete your booking."
+        error.message ||
+        "Unable to complete your reservation."
       );
     } finally {
       setSubmitting(false);
@@ -133,9 +135,11 @@ export default function BookingForm() {
           id="first_name"
           name="first_name"
           type="text"
+          placeholder="Enter your full name"
+          autoComplete="name"
+          maxLength={200}
           value={formData.first_name}
           onChange={handleChange}
-          maxLength={200}
           required
           aria-invalid={Boolean(errors.first_name)}
           aria-describedby={
@@ -149,114 +153,137 @@ export default function BookingForm() {
         )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="reservation_date">
-          Reservation date *
-        </label>
-        <input
-          id="reservation_date"
-          name="reservation_date"
-          type="date"
-          min={localToday()}
-          value={formData.reservation_date}
-          onChange={handleChange}
-          required
-          aria-invalid={Boolean(errors.reservation_date)}
-          aria-describedby={
-            errors.reservation_date
-              ? "reservation_date-error"
-              : undefined
-          }
-        />
-        {errors.reservation_date && (
-          <p className="field-error" id="reservation_date-error">
-            {errors.reservation_date}
-          </p>
-        )}
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="reservation_date">
+            Reservation date *
+          </label>
+          <input
+            id="reservation_date"
+            name="reservation_date"
+            type="date"
+            min={localToday()}
+            value={formData.reservation_date}
+            onChange={handleChange}
+            required
+            aria-invalid={Boolean(errors.reservation_date)}
+            aria-describedby={
+              errors.reservation_date
+                ? "reservation_date-error"
+                : undefined
+            }
+          />
+          {errors.reservation_date && (
+            <p
+              className="field-error"
+              id="reservation_date-error"
+            >
+              {errors.reservation_date}
+            </p>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="reservation_slot">
+            Reservation time *
+          </label>
+          <select
+            id="reservation_slot"
+            name="reservation_slot"
+            value={formData.reservation_slot}
+            onChange={handleChange}
+            required
+            aria-invalid={Boolean(errors.reservation_slot)}
+            aria-describedby={
+              errors.reservation_slot
+                ? "reservation_slot-error"
+                : undefined
+            }
+          >
+            <option value="">Select a time</option>
+            {availableTimes.map((time) => (
+              <option key={time.value} value={time.value}>
+                {time.label}
+              </option>
+            ))}
+          </select>
+          {errors.reservation_slot && (
+            <p
+              className="field-error"
+              id="reservation_slot-error"
+            >
+              {errors.reservation_slot}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="reservation_slot">
-          Reservation time *
-        </label>
-        <select
-          id="reservation_slot"
-          name="reservation_slot"
-          value={formData.reservation_slot}
-          onChange={handleChange}
-          required
-          aria-invalid={Boolean(errors.reservation_slot)}
-          aria-describedby={
-            errors.reservation_slot
-              ? "reservation_slot-error"
-              : undefined
-          }
-        >
-          <option value="">Select a time</option>
-          {availableTimes.map((time) => (
-            <option key={time.value} value={time.value}>
-              {time.label}
-            </option>
-          ))}
-        </select>
-        {errors.reservation_slot && (
-          <p className="field-error" id="reservation_slot-error">
-            {errors.reservation_slot}
-          </p>
-        )}
-      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="guests">
+            Number of guests *
+          </label>
+          <input
+            id="guests"
+            name="guests"
+            type="number"
+            min="1"
+            max="10"
+            value={formData.guests}
+            onChange={handleChange}
+            required
+            aria-invalid={Boolean(errors.guests)}
+            aria-describedby={
+              errors.guests ? "guests-error" : undefined
+            }
+          />
+          {errors.guests && (
+            <p className="field-error" id="guests-error">
+              {errors.guests}
+            </p>
+          )}
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="guests">Number of guests *</label>
-        <input
-          id="guests"
-          name="guests"
-          type="number"
-          min="1"
-          max="10"
-          value={formData.guests}
-          onChange={handleChange}
-          required
-          aria-invalid={Boolean(errors.guests)}
-          aria-describedby={
-            errors.guests ? "guests-error" : undefined
-          }
-        />
-        {errors.guests && (
-          <p className="field-error" id="guests-error">
-            {errors.guests}
-          </p>
-        )}
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="occasion">Occasion</label>
-        <select
-          id="occasion"
-          name="occasion"
-          value={formData.occasion}
-          onChange={handleChange}
-        >
-          <option value="">No special occasion</option>
-          <option value="Birthday">Birthday</option>
-          <option value="Anniversary">Anniversary</option>
-          <option value="Other">Other</option>
-        </select>
+        <div className="form-group">
+          <label htmlFor="occasion">Occasion</label>
+          <select
+            id="occasion"
+            name="occasion"
+            value={formData.occasion}
+            onChange={handleChange}
+          >
+            <option value="">No special occasion</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Anniversary">Anniversary</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
       </div>
 
       {serverError && (
-        <p className="server-error" role="alert">
-          {serverError}
-        </p>
+        <div className="server-error" role="alert">
+          <span aria-hidden="true">!</span>
+          <p>{serverError}</p>
+        </div>
       )}
 
       <button
         type="submit"
-        className="primary-button booking-submit"
+        className="btn btn-primary booking-submit"
         disabled={submitting}
       >
-        {submitting ? "Submitting..." : "Make Your Reservation"}
+        <span>
+          {submitting
+            ? "Confirming reservation..."
+            : "Confirm Reservation"}
+        </span>
+        <span aria-hidden="true">↗</span>
       </button>
+
+      <p className="form-disclaimer">
+        Your reservation is confirmed once the booking
+        request is successfully processed.
+      </p>
     </form>
   );
 }
