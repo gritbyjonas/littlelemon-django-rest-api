@@ -1,48 +1,77 @@
 
-import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
-function Header() {
+export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   return (
     <header className="site-header">
-      <div className="header-container">
+      <div className="header-inner container">
         <Link
           to="/"
-          className="brand"
-          aria-label="Little Lemon restaurant homepage"
+          className="logo"
+          aria-label="Little Lemon — Home"
+          onClick={closeMenu}
         >
-          <span className="brand-icon" aria-hidden="true">
-            🍋
-          </span>
-
-          <span className="brand-name">
-            LITTLE LEMON
+          <span className="logo-symbol" aria-hidden="true">✳</span>
+          <span className="logo-text">
+            LITTLE <strong>LEMON</strong>
+            <small>CHICAGO · EST. 1998</small>
           </span>
         </Link>
 
-        <nav aria-label="Main navigation">
-          <ul className="nav-links">
-            <li>
-              <NavLink to="/" end>
-                Home
-              </NavLink>
-            </li>
+        <button
+          type="button"
+          className="mobile-toggle"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="main-navigation"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
 
-            <li>
-              <a href="/#specials">
-                Menu
-              </a>
-            </li>
+        <nav
+          id="main-navigation"
+          className={`main-nav ${menuOpen ? "nav-open" : ""}`}
+          aria-label="Main navigation"
+        >
+          <NavLink to="/" end onClick={closeMenu}>
+            Home
+          </NavLink>
 
-            <li>
-              <NavLink to="/booking">
-                Reservations
-              </NavLink>
-            </li>
-          </ul>
+          <Link
+            to="/#menu"
+            onClick={closeMenu}
+            className={location.hash === "#menu" ? "active" : ""}
+          >
+            Our Menu
+          </Link>
+
+          <Link
+            to="/#about"
+            onClick={closeMenu}
+          >
+            Our Story
+          </Link>
+
+          <NavLink
+            to="/booking"
+            className="nav-reserve"
+            onClick={closeMenu}
+          >
+            Book a Table <span aria-hidden="true">↗</span>
+          </NavLink>
         </nav>
       </div>
     </header>
   );
 }
-
-export default Header;
