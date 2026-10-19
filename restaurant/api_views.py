@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import (
     BasePermission,
     SAFE_METHODS,
-    IsAuthenticated,
+    AllowAny,
 )
 
 from .models import Menu, Booking
@@ -29,18 +29,17 @@ class MenuViewSet(viewsets.ModelViewSet):
 class BookingViewSet(viewsets.ModelViewSet):
     queryset = Booking.objects.all().order_by("id")
     serializer_class = BookingSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_permissions(self):
-        # Until Booking has an owner field, editing existing
-        # reservations is restricted to staff.
-        if self.action in ["update", "partial_update", "destroy"]:
-            return [IsStaffOrReadOnlyForBookings()]
+        # Guests may create reservations.
+        if self.action == "create":
+            return [AllowAny()]
 
-        return [permission() for permission in self.permission_classes]
+        # Only staff can view or manage reservations.
+        return [IsStaffOnly()]
 
 
-class IsStaffOrReadOnlyForBookings(BasePermission):
+class IsStaffOnly(BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
