@@ -3,23 +3,27 @@ import { Link, useLocation } from "react-router-dom";
 
 export default function ConfirmedBooking() {
   const location = useLocation();
-
   const reservation = location.state?.reservation;
   const booking = location.state?.booking;
 
   if (!reservation || !booking?.id) {
     return (
-      <section className="page-container confirmation-page">
-        <div className="confirmation-card">
-          <h1>No Reservation Found</h1>
+      <section className="confirmation-page">
+        <div className="confirmation-container">
+          <div className="confirmation-icon" aria-hidden="true">
+            ✳
+          </div>
 
-          <p>
-            No reservation details are available.
+          <span className="eyebrow">LITTLE LEMON</span>
+          <h1>No reservation found</h1>
+
+          <p className="confirmation-description">
+            We couldn't find your booking details.
             Please make a new reservation.
           </p>
 
-          <Link to="/booking" className="primary-button">
-            Make a Reservation
+          <Link to="/booking" className="btn btn-primary">
+            Book a Table <span aria-hidden="true">↗</span>
           </Link>
         </div>
       </section>
@@ -38,65 +42,81 @@ export default function ConfirmedBooking() {
     2000,
     0,
     1,
-    reservation.reservation_slot
+    Number(reservation.reservation_slot)
   ).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
   });
 
+  const details = [
+    ["Booking reference", `#${booking.id}`],
+    ["Guest name", reservation.first_name],
+    ["Reservation date", formattedDate],
+    ["Reservation time", formattedTime],
+    ["Number of guests", reservation.guests],
+    ["Occasion", reservation.occasion || "None"],
+  ];
+
   return (
-    <section className="page-container confirmation-page">
-      <div className="confirmation-card">
-        <div
-          className="confirmation-icon"
-          aria-hidden="true"
-        >
-          🍋
+    <section className="confirmation-page">
+      <div className="confirmation-container">
+        <div className="confirmation-icon" aria-hidden="true">
+          ✓
         </div>
 
-        <h1>Reservation Confirmed!</h1>
+        <span className="eyebrow">
+          YOUR TABLE IS RESERVED
+        </span>
 
-        <p role="status">
+        <h1>
+          It's a <em>date!</em>
+        </h1>
+
+        <p className="confirmation-description" role="status">
           Thank you, {reservation.first_name}!
-          Your table has been reserved successfully.
+          Your reservation at Little Lemon is confirmed.
+          We can't wait to welcome you.
         </p>
 
-        <div className="reservation-details">
-          <h2>Booking Details</h2>
+        <div className="confirmation-details">
+          <div className="confirmation-details-header">
+            <div>
+              <span className="eyebrow">RESERVATION SUMMARY</span>
+              <h2>Your booking details</h2>
+            </div>
+            <span className="confirmation-status">
+              Confirmed
+            </span>
+          </div>
 
-          <p>
-            <strong>Booking ID:</strong> {booking.id}
-          </p>
+          <dl className="confirmation-detail-list">
+            {details.map(([label, value]) => (
+              <div className="confirmation-detail" key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
 
+        <div className="confirmation-message">
+          <span aria-hidden="true">✳</span>
           <p>
-            <strong>Name:</strong> {reservation.first_name}
-          </p>
-
-          <p>
-            <strong>Date:</strong> {formattedDate}
-          </p>
-
-          <p>
-            <strong>Time:</strong> {formattedTime}
-          </p>
-
-          <p>
-            <strong>Number of Guests:</strong> {reservation.guests}
-          </p>
-
-          <p>
-            <strong>Occasion:</strong>{" "}
-            {reservation.occasion || "None"}
+            Great food, warm company, and wonderful
+            memories are waiting for you.
           </p>
         </div>
 
-        <p>
-          We look forward to welcoming you to Little Lemon!
-        </p>
+        <div className="confirmation-actions">
+          <Link to="/" className="btn btn-primary">
+            Back to Homepage
+            <span aria-hidden="true">↗</span>
+          </Link>
 
-        <Link to="/" className="primary-button">
-          Return to Homepage
-        </Link>
+          <Link to="/booking" className="outline-button">
+            Make Another Booking
+          </Link>
+        </div>
       </div>
     </section>
   );
